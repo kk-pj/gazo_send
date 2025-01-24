@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+    <style>
+        table, th, td {
+            border: .5px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        img {
+            max-width: 15rem;
+            max-height: 10rem;
+        }
+    </style>
+
+
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>アップロード画像一覧</title>
+</head>
+<body>
+    <h1>アップロードされた画像一覧</h1>
+    <form method="get" action="{% url 'image:download_images_in_range' %}">
+        <label for="start_date">開始日</label>
+        <input type="date" name="start_date" id="start_date">
+        <label for="end_date">終了日</label>
+        <input type="date" name="end_date" id="end_date">
+        <button type="submit">指定期間で一括ダウンロード</button>
+    </form>
+
+    <table style="border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th style="width:10rem;">Message</th>
+                <th>Image</th>
+                <th>Uploaded At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for image in images %}
+            <tr>
+                <td>{{ image.name|default:"No Name" }}</td>
+                <td>{{ image.message|default:"No Message" }}</td>
+                <td>
+                    {% if image.image %}
+                        <img src="{{ image.image.url }}" alt="Uploaded Image">
+                    {% else %}
+                        No Image
+                    {% endif %}
+                </td>
+                <td>{{ image.uploaded_at }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No images found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table></body>
+</html>
